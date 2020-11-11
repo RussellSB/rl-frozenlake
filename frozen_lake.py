@@ -116,10 +116,16 @@ class FrozenLake(Environment):
 
 
     def p(self, next_state, state, action):
-        return self.tp(state, next_state, action)
+        return self.tp[state, next_state, action]
 
-    # def r(self, next_state, state, action):
-        # TODO:
+    def r(self, next_state, state, action):
+        char = self.lake_flat[state]
+
+        if(char == '$'): # If moving from goal state
+            return 1
+
+        return 0
+
 
     def render(self, policy=None, value=None):
         if policy is None:
@@ -146,11 +152,11 @@ class FrozenLake(Environment):
                 print(value[:-1].reshape(self.lake.shape))
 
 
-    def play(env):
-        actions = ['w', 'a', 's', 'd']
+    def play(self):
+        actions = ['w', 's', 'a', 'd']
 
-        state = env.reset()
-        env.render()
+        state = self.reset()
+        self.render()
 
         done = False
         while not done:
@@ -158,7 +164,7 @@ class FrozenLake(Environment):
             if c not in actions:
                 raise Exception('Invalid action')
 
-            state, r, done = env.step(actions.index(c))
+            state, r, done = self.step(actions.index(c))
 
-            env.render()
+            self.render()
             print('Reward: {0}.'.format(r))
