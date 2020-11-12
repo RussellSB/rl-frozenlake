@@ -9,7 +9,7 @@ def main():
             ['.', '.', '.', '#'],
             ['#', '.', '.', '$']]
 
-    env = FrozenLake(lake, slip=1, max_steps=16, seed=seed)
+    env = FrozenLake(lake, slip=0.1, max_steps=16, seed=seed)
     env.play()
 
     print('# Model-based algorithms')
