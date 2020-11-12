@@ -20,10 +20,8 @@ class EnvironmentModel:
         # Scenario action 3 (right) - where slip is 0.2
         # Moving from state 0. We want an array like this:
         # p = [0.1, 0.8, 0, 0, 0.1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        print(self.tp[state])
         print(p)
         next_state = self.random_state.choice(self.n_states, p=p)  # chooses state with 1
-        print(next_state)
         reward = self.r(next_state, state, action)
 
         return next_state, reward
@@ -126,13 +124,13 @@ class FrozenLake(Environment):
                         next_state_index = self.states_to_indices.get(next_state, state_index)
                         self.tp[state_index, next_state_index, action_index] = 1.0
 
-            # Remodels each state-state-action array to cater for slipping
-            valid_states, valid_actions = np.where(self.tp[state_index] == 1)
-            for state_possible_index, state_possible in enumerate(self.indices_to_states):
-                for action_index, action in enumerate(self.actions):
-                    if self.tp[state_index, state_possible_index, action_index] == 0 and \
-                            state_possible_index in valid_states and action_index in valid_actions:
-                        self.tp[state_index, state_possible_index, action_index] = 2
+                copy = self.tp[state_index, state_possible_index]
+                if 1 in copy:
+                    self.tp[state_index, state_possible_index] = np.where(copy == 1, 1 - slip, copy)
+                    self.tp[state_index, state_possible_index] = np.where(copy == 0, 0.1, copy)
+
+                    # Instead of 2 maybe self.slip / (len(self.actions)-1)
+                    # but this doesn't make sense .....
 
 
         print('t')
