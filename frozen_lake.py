@@ -10,10 +10,10 @@ class EnvironmentModel:
         self.random_state = np.random.RandomState(seed)
 
     def p(self, next_state, state, action):
-        raise NotImplementedError()  # Not called, as overrided by grandchild
+        raise NotImplementedError()  # Overrided by FrozenLake
 
     def r(self, next_state, state, action):
-        raise NotImplementedError()  # Not called, as overrided by grandchild
+        raise NotImplementedError()  # Overrided by FrozenLake
 
     def draw(self, state, action):
         p = [self.p(ns, state, action) for ns in range(self.n_states)]
@@ -51,7 +51,7 @@ class Environment(EnvironmentModel):
         return self.state, reward, done
 
     def render(self, policy=None, value=None):
-        raise NotImplementedError()
+        raise NotImplementedError()  # Overrided by FrozenLake
 
 
 class FrozenLake(Environment):
@@ -108,7 +108,12 @@ class FrozenLake(Environment):
 
 
     def step(self, action):
-        state, reward, done = Environment.step(self, action)
+        char = self.lake_flat[self.state]
+        if char == '$' or char == '#':
+            state = self.absorbing_state  # move to absorption state if moving from goal or hole
+            reward = self.r(state, self.state, action)  # calculate 1 for goal or 0 for hole
+        else:
+            state, reward, done = Environment.step(self, action)  # else, calculate normally on ice
 
         done = (state == self.absorbing_state) or done
 
