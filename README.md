@@ -11,7 +11,6 @@ After reaching the goal state, the agent recieves a reward when commiting an act
 The agent may move for a number of steps. In this period the reward can either conclude to 1 (goal reached) or 0 (goal not reached).
 
 ## Algorithms TODO
-- Policy iteration
 - Value iteration
 - Sarsa control
 - Q-learning
@@ -19,6 +18,7 @@ The agent may move for a number of steps. In this period the reward can either c
 - Q-learning control + linear function approximation
 
 ## In-progess
-- Frozen lake environment
+- Policy iteration
 
 ## Implemented
+- Frozen lake environment
