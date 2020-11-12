@@ -124,17 +124,21 @@ class FrozenLake(Environment):
                         next_state_index = self.states_to_indices.get(next_state, state_index)
                         self.tp[state_index, next_state_index, action_index] = 1.0
 
-                copy = self.tp[state_index, state_possible_index]
-                if 1 in copy:
-                    self.tp[state_index, state_possible_index] = np.where(copy == 1, 1 - slip, copy)
-                    self.tp[state_index, state_possible_index] = np.where(copy == 0, 0.1, copy)
+            # Remodels each state-state-action array to cater for slipping
+            valid_states, valid_actions = np.where(self.tp[state_index] == 1)
+            valid_states = np.unique(valid_states)  # At borders can have actions that map to the same state
 
-                    # Instead of 2 maybe self.slip / (len(self.actions)-1)
-                    # but this doesn't make sense .....
+            for state_possible_index, state_possible in enumerate(self.indices_to_states):
+                for action_index, action in enumerate(self.actions):
+                    # if the state is reachable with other actions (hence 0), and if the action exists
+                    if self.tp[state_index, state_possible_index, action_index] == 0 and \
+                            state_possible_index in valid_states and action_index in valid_actions:
+                        # Change p from 0 to a probability determined by slip and valid states (excluding the p=1 one)
+                        self.tp[state_index, state_possible_index, action_index] = self.slip / (len(valid_states)-1)
 
-
-        print('t')
-
+                    # Readjust the p=1 value so that it distributes along side the slipping probabilities
+                    if self.tp[state_index, state_possible_index, action_index] == 1:
+                        self.tp[state_index, state_possible_index, action_index] -= self.slip
 
 
     def step(self, action):
