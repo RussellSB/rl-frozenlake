@@ -17,6 +17,9 @@ class EnvironmentModel:
 
     def draw(self, state, action):
         p = [self.p(ns, state, action) for ns in range(self.n_states)]
+        if (np.where(np.array(p) == 1))[0].size == 0:
+            print('Tried to move out of bounds')
+            return state, 0
         next_state = self.random_state.choice(self.n_states, p=p)
         reward = self.r(next_state, state, action)
 
@@ -108,12 +111,24 @@ class FrozenLake(Environment):
 
 
     def step(self, action):
+
+        # Prepare to move, check if about to slip
+        if(np.random.random() <= self.slip):
+            # oof you slipped, valid action in a random direction it is
+            valid_next_state_action_pairs = np.argwhere(self.tp[0] == 1)
+            rand_sample_index = np.random.randint(len(valid_next_state_action_pairs))
+
+            next_state_action_pair = valid_next_state_action_pairs[rand_sample_index]
+            action = next_state_action_pair[1]  # slipped! New random but valid action
+            print('Slipped!')
+
+        # Start moving
         char = self.lake_flat[self.state]
         if char == '$' or char == '#':
             state = self.absorbing_state  # move to absorption state if moving from goal or hole
             reward = self.r(state, self.state, action)  # calculate 1 for goal or 0 for hole
         else:
-            state, reward, done = Environment.step(self, action)  # else, calculate normally on ice
+            state, reward, done = Environment.step(self, action)  # else, transition normally
 
         done = (state == self.absorbing_state) or done
 
