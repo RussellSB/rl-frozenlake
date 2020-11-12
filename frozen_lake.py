@@ -17,10 +17,13 @@ class EnvironmentModel:
 
     def draw(self, state, action):
         p = [self.p(ns, state, action) for ns in range(self.n_states)]
-        if (np.where(np.array(p) == 1))[0].size == 0:
-            print('Tried to move out of bounds')
-            return state, 0
-        next_state = self.random_state.choice(self.n_states, p=p)
+        # Scenario action 3 (right) - where slip is 0.2
+        # Moving from state 0. We want an array like this:
+        # p = [0.1, 0.8, 0, 0, 0.1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        print(self.tp[state])
+        print(p)
+        next_state = self.random_state.choice(self.n_states, p=p)  # chooses state with 1
+        print(next_state)
         reward = self.r(next_state, state, action)
 
         return next_state, reward
@@ -97,10 +100,19 @@ class FrozenLake(Environment):
         # A 3D cube storing the transition probabilities for each state s to each new state s' through each action a
         self.tp = np.zeros((self.n_states, self.n_states, self.n_actions))
 
+        # Models environment deterministically
         # Modifies p values from 0 to 1 where appropriate
         for state_index, state in enumerate(self.indices_to_states):
             for state_possible_index, state_possible in enumerate(self.indices_to_states):
                 for action_index, action in enumerate(self.actions):
+
+                    # Checks if hole or goal, to only enable absorption state transitions
+                    state_char = self.lake_flat[state_index]
+                    if state_char == '$' or state_char == '#':
+                        self.tp[state_index, 16, action_index] = 1.0
+                        continue
+
+                    # Proceeds normally
 
                     next_state = (state[0] + action[0], state[1] + action[1])  # simulates action and gets next state
                     next_state_index = self.states_to_indices.get(next_state)  # gets index of next state coordinates
@@ -109,33 +121,47 @@ class FrozenLake(Environment):
                     if next_state_index is not None and next_state_index == state_possible_index:
                         self.tp[state_index, next_state_index, action_index] = 1.0
 
+                    # If next_state is out of bounds, default next state to current state index
+                    if next_state_index is None:
+                        next_state_index = self.states_to_indices.get(next_state, state_index)
+                        self.tp[state_index, next_state_index, action_index] = 1.0
+
+            # Remodels each state-state-action array to cater for slipping
+            valid_states, valid_actions = np.where(self.tp[state_index] == 1)
+            for state_possible_index, state_possible in enumerate(self.indices_to_states):
+                for action_index, action in enumerate(self.actions):
+                    if self.tp[state_index, state_possible_index, action_index] == 0 and \
+                            state_possible_index in valid_states and action_index in valid_actions:
+                        self.tp[state_index, state_possible_index, action_index] = 2
+
+
+        print('t')
+
+
 
     def step(self, action):
-
-        # Prepare to move, check if about to slip
-        if(np.random.random() <= self.slip):
-            # oof you slipped, valid action in a random direction it is
-            valid_next_state_action_pairs = np.argwhere(self.tp[0] == 1)
-            rand_sample_index = np.random.randint(len(valid_next_state_action_pairs))
-
-            next_state_action_pair = valid_next_state_action_pairs[rand_sample_index]
-            action = next_state_action_pair[1]  # slipped! New random but valid action
-            print('Slipped!')
-
-        # Start moving
-        char = self.lake_flat[self.state]
-        if char == '$' or char == '#':
-            state = self.absorbing_state  # move to absorption state if moving from goal or hole
-            reward = self.r(state, self.state, action)  # calculate 1 for goal or 0 for hole
-        else:
-            state, reward, done = Environment.step(self, action)  # else, transition normally
-
+        state, reward, done = Environment.step(self, action)  # else, transition normally
         done = (state == self.absorbing_state) or done
-
         return state, reward, done
 
 
     def p(self, next_state, state, action):
+
+        # Prepare to move, check if about to slip
+        #if (np.random.random() <= self.slip):
+        #   # oof you slipped, valid action in a random direction it is
+        #    valid_next_state_action_pairs = np.argwhere(self.tp[state] == 1)
+        #    rand_sample_index = np.random.randint(len(valid_next_state_action_pairs))
+
+        #    next_state_action_pair = valid_next_state_action_pairs[rand_sample_index]
+
+        #    # Slipped! Assigned new random but valid action and next-state
+        #    next_state = next_state_action_pair[0]
+        #    action = next_state_action_pair[1]
+        #    print('Slipped!')
+
+        # BUG: currently iteratively gets called for each 16 hypothetical states
+
         return self.tp[state, next_state, action]
 
     def r(self, next_state, state, action):
