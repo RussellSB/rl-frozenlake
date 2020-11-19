@@ -37,8 +37,8 @@ def policy_improvement(env, value, gamma):
                     env.p(next_s, s, a) *
                     (env.r(next_s, s, a) + gamma * value[next_s])
                     for next_s in range(env.n_states)
+                    for a in range(env.n_actions)
                 ]
-                for a in range(env.n_actions)
             )
         ])
 
