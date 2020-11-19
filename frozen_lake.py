@@ -1,5 +1,16 @@
 import numpy as np
 from itertools import product
+import contextlib
+
+# Configures numpy print options
+@contextlib.contextmanager
+def _printoptions(*args, **kwargs):
+    original = np.get_printoptions()
+    np.set_printoptions(*args, **kwargs)
+    try:
+        yield
+    finally:
+        np.set_printoptions(**original)
 
 class EnvironmentModel:
     def __init__(self, n_states, n_actions, seed=None):
@@ -150,7 +161,11 @@ class FrozenLake(Environment):
         return self.tp[state, next_state, action]
 
     def r(self, next_state, state, action):
-        char = self.lake_flat[state]
+        char = 'o'
+
+        # if within env boundaries
+        if(state < self.n_states-1):
+            char = self.lake_flat[state]  # get char of state in environment
 
         if(char == '$'): # If moving from goal state
             return 1
@@ -199,3 +214,4 @@ class FrozenLake(Environment):
 
             self.render()
             print('Reward: {0}.'.format(r))
+
