@@ -1,5 +1,4 @@
 import numpy as np
-import contextlib
 from itertools import product
 
 class EnvironmentModel:
@@ -21,7 +20,7 @@ class EnvironmentModel:
         # Moving from state 0. We want an array like this:
         # p = [0.1, 0.8, 0, 0, 0.1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         print(p)
-        next_state = self.random_state.choice(self.n_states, p=p)  # chooses state with 1
+        next_state = self.random_state.choice(self.n_states, p=p)  # chooses state with highest
         reward = self.r(next_state, state, action)
 
         return next_state, reward
@@ -148,22 +147,6 @@ class FrozenLake(Environment):
 
 
     def p(self, next_state, state, action):
-
-        # Prepare to move, check if about to slip
-        #if (np.random.random() <= self.slip):
-        #   # oof you slipped, valid action in a random direction it is
-        #    valid_next_state_action_pairs = np.argwhere(self.tp[state] == 1)
-        #    rand_sample_index = np.random.randint(len(valid_next_state_action_pairs))
-
-        #    next_state_action_pair = valid_next_state_action_pairs[rand_sample_index]
-
-        #    # Slipped! Assigned new random but valid action and next-state
-        #    next_state = next_state_action_pair[0]
-        #    action = next_state_action_pair[1]
-        #    print('Slipped!')
-
-        # BUG: currently iteratively gets called for each 16 hypothetical states
-
         return self.tp[state, next_state, action]
 
     def r(self, next_state, state, action):
