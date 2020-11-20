@@ -44,16 +44,6 @@ def policy_improvement(env, value, gamma):
             ]
         )
 
-    # for s in range(env.n_states):
-    #     actions_to_max = []
-    #     for a in range(env.n_actions):
-    #         term = 0
-    #         for next_s in range(env.n_states):
-    #             term += env.p(next_s, s, a) * (env.r(next_s, s, a) + gamma * value[next_s])
-    #
-    #         actions_to_max.append(term)
-    #     policy[s] = max(actions_to_max)
-
     return policy
 
 def policy_iteration(env, gamma, theta, max_iterations, policy=None):
