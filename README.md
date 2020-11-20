@@ -18,7 +18,8 @@ The agent may move for a number of steps. In this period the reward can either c
 - Q-learning control + linear function approximation
 
 ## In-progess
-- Policy iteration
+
 
 ## Implemented
+- Policy iteration
 - Frozen lake environment
