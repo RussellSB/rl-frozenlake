@@ -15,7 +15,7 @@ def policy_evaluation(env, policy, gamma, theta, max_iterations):
             value[s] = sum(
                 [
                     env.p(next_s, s, policy[s]) *
-                    ((env.r(next_s, s, policy[s]) + gamma * value[next_s]))
+                    (env.r(next_s, s, policy[s]) + gamma * value[next_s])
                     for next_s in range(env.n_states)
                 ]
             )
@@ -36,7 +36,7 @@ def policy_improvement(env, value, gamma):
                 sum(
                     [
                         env.p(next_s, s, a) *
-                        ((env.r(next_s, s, a) + gamma * value[next_s]))
+                        (env.r(next_s, s, a) + gamma * value[next_s])
                         for next_s in range(env.n_states)
                     ]
                 )
