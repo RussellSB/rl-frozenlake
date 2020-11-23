@@ -30,28 +30,19 @@ def policy_evaluation(env, policy, gamma, theta, max_iterations):
 def policy_improvement(env, value, gamma):
     policy = np.zeros(env.n_states, dtype=int)
 
-    # for s in range(env.n_states):
-    #     policy[s] = np.argmax(
-    #         [
-    #             sum(
-    #                 [
-    #                     env.p(s, next_s, a) *
-    #                     (env.r(s, next_s, a) + gamma * value[next_s])
-    #                     for next_s in range(env.n_states)
-    #                 ]
-    #             ) for a in range(env.n_actions)
-    #         ]
-    #     )
-
     for s in range(env.n_states):
-        actions_to_max = []
-        for a in range(env.n_actions):
-            term = 0
-            for next_s in range(env.n_states):
-                term += env.p(s, next_s, a) * env.r(s, next_s, a) + gamma * value[next_s]
-
-            actions_to_max.append(term)
-        policy[s] = max(actions_to_max)
+        policy[s] = np.argmax(  # picks action for each state with the highest expected reward
+            [
+                sum(
+                    [
+                        env.p(next_s, s, a) *
+                        (env.r(next_s, s, a) + gamma * value[next_s])
+                        for next_s in range(env.n_states)
+                    ]
+                )
+                for a in range(env.n_actions)
+            ]
+        )
 
     return policy
 
@@ -61,7 +52,13 @@ def policy_iteration(env, gamma, theta, max_iterations, policy=None):
     else:
         policy = np.array(policy, dtype=int)
 
-    value = policy_evaluation(env, policy, gamma, theta, max_iterations)
-    policy = policy_improvement(env, value, gamma)
+    while(True):
+        policy_initial = policy
+
+        value = policy_evaluation(env, policy, gamma, theta, max_iterations)
+        policy = policy_improvement(env, value, gamma)
+
+        if np.array_equal(policy_initial, policy):
+            break
 
     return policy, value
