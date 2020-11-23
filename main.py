@@ -1,6 +1,7 @@
 from frozen_lake import FrozenLake
 from policy_iteration import policy_iteration
 from value_iteration import value_iteration
+from tabular_model_free import sarsa, q_learning
 
 def main():
     seed = 0
@@ -19,16 +20,24 @@ def main():
     theta = 0.001
     max_iterations = 10000
 
-    print('')
+    #print('')
 
-    print('## Policy iteration')
-    policy, value = policy_iteration(env, gamma, theta, max_iterations)
-    env.render(policy, value)
+    #print('## Policy iteration')
+    #policy, value = policy_iteration(env, gamma, theta, max_iterations)
+    #env.render(policy, value)
 
-    print('')
+    #print('')
 
-    print('## Value iteration')
-    policy, value = value_iteration(env, gamma, theta, max_iterations)
+    #print('## Value iteration')
+    #policy, value = value_iteration(env, gamma, theta, max_iterations)
+    #env.render(policy, value)
+
+    max_episodes = 1000
+    eta = 10
+    epsilon = 0.2
+
+    print('## sarsa')
+    policy, value = sarsa(env, max_episodes, eta, gamma, epsilon)
     env.render(policy, value)
 
 main()
