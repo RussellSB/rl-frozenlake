@@ -32,9 +32,9 @@ def main():
     #policy, value = value_iteration(env, gamma, theta, max_iterations)
     #env.render(policy, value)
 
-    max_episodes = 1000
-    eta = 10
-    epsilon = 0.2
+    max_episodes = 2000
+    eta = 0.5
+    epsilon = 0.5
 
     print('## sarsa')
     policy, value = sarsa(env, max_episodes, eta, gamma, epsilon)
