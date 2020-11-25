@@ -38,6 +38,8 @@ def main():
 
     print('## sarsa')
     policy, value = sarsa(env, max_episodes, eta, gamma, epsilon)
+    #print('## q_learning')
+    #policy, value = q_learning(env, max_episodes, eta, gamma, epsilon)
     env.render(policy, value)
 
 main()
