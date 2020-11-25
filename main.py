@@ -20,26 +20,28 @@ def main():
     theta = 0.001
     max_iterations = 10000
 
-    #print('')
+    print('')
 
-    #print('## Policy iteration')
-    #policy, value = policy_iteration(env, gamma, theta, max_iterations)
-    #env.render(policy, value)
+    print('## Policy iteration')
+    policy, value = policy_iteration(env, gamma, theta, max_iterations)
+    env.render(policy, value)
 
-    #print('')
+    print('')
 
-    #print('## Value iteration')
-    #policy, value = value_iteration(env, gamma, theta, max_iterations)
-    #env.render(policy, value)
+    print('## Value iteration')
+    policy, value = value_iteration(env, gamma, theta, max_iterations)
+    env.render(policy, value)
 
     max_episodes = 2000
     eta = 0.5
     epsilon = 0.5
 
+    print('# Model-free algorithms')
     print('## sarsa')
     policy, value = sarsa(env, max_episodes, eta, gamma, epsilon)
-    #print('## q_learning')
-    #policy, value = q_learning(env, max_episodes, eta, gamma, epsilon)
+    env.render(policy, value)
+    print('## q_learning')
+    policy, value = q_learning(env, max_episodes, eta, gamma, epsilon)
     env.render(policy, value)
 
 main()
