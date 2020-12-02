@@ -140,15 +140,17 @@ class FrozenLake(Environment):
 
             for state_possible_index, state_possible in enumerate(self.indices_to_states):
                 for action_index, action in enumerate(self.actions):
+
+                    # Readjust the p=1 value so that it distributes along side the slipping probabilities
+                    if self.tp[state_index, state_possible_index, action_index] == 1:
+                        self.tp[state_index, state_possible_index, action_index] -= self.slip
+
                     # if the state is reachable with other actions (hence 0), and if the action exists
                     if self.tp[state_index, state_possible_index, action_index] == 0 and \
                             state_possible_index in valid_states and action_index in valid_actions:
                         # Change p from 0 to a probability determined by slip and valid states (excluding the p=1 one)
                         self.tp[state_index, state_possible_index, action_index] = self.slip / (len(valid_states)-1)
 
-                    # Readjust the p=1 value so that it distributes along side the slipping probabilities
-                    if self.tp[state_index, state_possible_index, action_index] == 1:
-                        self.tp[state_index, state_possible_index, action_index] -= self.slip
 
 
     def step(self, action):
