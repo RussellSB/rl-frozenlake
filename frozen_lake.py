@@ -91,7 +91,7 @@ class FrozenLake(Environment):
         n_actions = 4
 
         pi = np.zeros(n_states, dtype=float)  # initial p
-        pi[np.where(self.lake_flat == '&')[0]] = 1.0  # setting goal state p to 1
+        pi[np.where(self.lake_flat == '&')[0]] = 1.0  # setting start state p to 1
 
         self.absorbing_state = n_states - 1   # set to 16 - outside lake_flat, ranging from 0-15
 
