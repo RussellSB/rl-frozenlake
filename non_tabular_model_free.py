@@ -2,6 +2,7 @@
 import numpy as np
 import random
 
+
 class LinearWrapper:
     def __init__(self, env):
         self.env = env
@@ -99,11 +100,12 @@ def linear_q_learning(env, max_episodes, eta, gamma, epsilon, seed=None):
 
             q = features.dot(theta)
 
-            #Temporal difference
+            # Temporal difference
             delta = delta + (gamma * randomBestAction(np.average(q, axis=0)))
             theta = theta + (eta * delta.dot(features))
 
     return theta
+
 
 def randomBestAction(mean_rewards):
     best_actions = np.array(np.argwhere(mean_rewards == np.amax(mean_rewards))).flatten()
