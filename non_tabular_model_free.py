@@ -10,6 +10,7 @@ class LinearWrapper:
         self.n_actions = self.env.n_actions
         self.n_states = self.env.n_states
         self.n_features = self.n_actions * self.n_states
+        self.absorbing_state = self.env.absorbing_state
 
     def encode_state(self, s):
         features = np.zeros((self.n_actions, self.n_features))
@@ -76,33 +77,32 @@ def linear_q_learning(env, max_episodes, eta, gamma, epsilon, seed=None):
         # TODO:
 
         # Compute Q(a)
-        q = features.dot(theta)
-        print('Q:')
-        print(q)
-        print('Features:')
-        print(features)
+        q = np.zeros(env.n_actions)
+        for a in range(env.n_actions):
+            q[a] = theta.dot(features[a])
 
-        while (s != env.absorbing_state):
+        done = False
+        while not done:
             # Select action a_prime for state s_prime according to an e-greedy policy based on Q
-            if (timestep < env.n_actions):
+            if timestep < env.n_actions:
                 a = timestep  # select each action once
             else:
-                best_action = randomBestAction(np.average(q, axis=0))
-                if (np.random.random(1) < epsilon[i]):
+                best_action = randomBestAction(q)
+                if np.random.random(1) < epsilon[i]:
                     a = best_action
                 else:
                     a = random.randrange(env.n_actions)
             timestep += 1
 
             # Get next state and reward for best action chosen
-            s_prime, r, done = env.step(a)
+            features, r, done = env.step(a)
             delta = r - q[a]
-
-            q = features.dot(theta)
+            for a_prime in range(env.n_actions):
+                q[a_prime] = theta.dot(features[a_prime])
 
             # Temporal difference
-            delta = delta + (gamma * randomBestAction(np.average(q, axis=0)))
-            theta = theta + (eta * delta.dot(features))
+            delta = delta + (gamma * randomBestAction(q))
+            theta = theta + eta[i] * delta * features[a]
 
     return theta
 

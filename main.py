@@ -22,18 +22,18 @@ def main():
     theta = 0.001
     max_iterations = 10000
 
-    print('')
-
-    print('## Policy iteration')
-    policy, value = policy_iteration(env, gamma, theta, max_iterations)
-    env.render(policy, value)
-
-    print('')
-
-    print('## Value iteration')
-    policy, value = value_iteration(env, gamma, theta, max_iterations)
-    env.render(policy, value)
-
+    # print('')
+    #
+    # print('## Policy iteration')
+    # policy, value = policy_iteration(env, gamma, theta, max_iterations)
+    # env.render(policy, value)
+    #
+    # print('')
+    #
+    # print('## Value iteration')
+    # policy, value = value_iteration(env, gamma, theta, max_iterations)
+    # env.render(policy, value)
+    #
     max_episodes = 2000
     eta = 0.5
     epsilon = 0.5
