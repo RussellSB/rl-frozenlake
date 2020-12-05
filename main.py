@@ -3,7 +3,7 @@ from policy_iteration import policy_iteration
 from value_iteration import value_iteration
 from tabular_model_free import sarsa, q_learning
 from non_tabular_model_free import linear_q_learning, linear_sarsa, LinearWrapper
-
+import numpy as np
 
 def main():
     seed = 0
@@ -46,27 +46,41 @@ def main():
     max_episodes = 2000
     eta = 0.5
     epsilon = 0.5
+    sarsa_policy = policy * 0
+    q_learning_policy = policy * 0
+    linear_sarsa_policy = 0
+    linear_q_learning_policy = 0
+    for episodes in np.arange(100,4000,100):
+        print(f'episodes = {episodes}')
+        if not (np.array_equal(sarsa_policy, policy)):
+            sarsa_policy, value = sarsa(env, episodes, eta, gamma, epsilon)
+            if np.array_equal(sarsa_policy,policy):
+                print(f"sarsa optimal = {episodes}")
+                env.render(sarsa_policy, value)
 
-    print('# Model-free algorithms')
-    print('## sarsa')
-    policy, value = sarsa(env, max_episodes, eta, gamma, epsilon)
-    env.render(policy, value)
-    print('## q_learning')
-    policy, value = q_learning(env, max_episodes, eta, gamma, epsilon)
-    env.render(policy, value)
+        if not np.array_equal(q_learning_policy, policy):
+            q_learning_policy, value = sarsa(env, episodes, eta, gamma, epsilon)
+            if np.array_equal(q_learning_policy, policy):
+                print(f"q_learning_policy optimal = {episodes}")
+                env.render(q_learning_policy, value)
 
-    print('# Model-free algorithms')
-    linear_env = LinearWrapper(env)
+    print('sarsa final')
+    env.render(sarsa_policy, value)
+    print('q learning final')
+    env.render(q_learning_policy, value)
 
-    print('## linear sarsa')
-    parameters = linear_sarsa(linear_env, max_episodes, eta, gamma, epsilon, seed=seed)
-    policy, value = linear_env.decode_policy(parameters)
-    linear_env.render(policy, value)
-
-    print('## linear q_learning')
-    parameters = linear_q_learning(linear_env, max_episodes, eta, gamma, epsilon, seed=seed)
-    policy, value = linear_env.decode_policy(parameters)
-    linear_env.render(policy, value)
+    # print('# Model-free algorithms')
+    # linear_env = LinearWrapper(env)
+    #
+    # print('## linear sarsa')
+    # parameters = linear_sarsa(linear_env, max_episodes, eta, gamma, epsilon, seed=seed)
+    # policy, value = linear_env.decode_policy(parameters)
+    # linear_env.render(policy, value)
+    #
+    # print('## linear q_learning')
+    # parameters = linear_q_learning(linear_env, max_episodes, eta, gamma, epsilon, seed=seed)
+    # policy, value = linear_env.decode_policy(parameters)
+    # linear_env.render(policy, value)
 
 
 main()
