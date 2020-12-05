@@ -106,7 +106,6 @@ def linear_q_learning(env, max_episodes, eta, gamma, epsilon, seed=None):
         # TODO:
 
         # Compute Q(a)
-        q = np.zeros(env.n_actions)
         q = features.dot(theta)
 
         done = False

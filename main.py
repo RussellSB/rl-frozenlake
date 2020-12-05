@@ -2,7 +2,7 @@ from frozen_lake import FrozenLake
 from policy_iteration import policy_iteration
 from value_iteration import value_iteration
 from tabular_model_free import sarsa, q_learning
-from non_tabular_model_free import linear_q_learning, LinearWrapper
+from non_tabular_model_free import linear_q_learning, linear_sarsa, LinearWrapper
 
 
 def main():
@@ -45,14 +45,16 @@ def main():
     # print('## q_learning')
     # policy, value = q_learning(env, max_episodes, eta, gamma, epsilon)
     # env.render(policy, value)
-    #
-    # print('# Model-free algorithms')
-    # print('## linear sarsa')
-    # policy, value = sarsa(env, max_episodes, eta, gamma, epsilon)
-    # env.render(policy, value)
+
+    print('# Model-free algorithms')
+    linear_env = LinearWrapper(env)
+
+    print('## linear sarsa')
+    parameters = linear_sarsa(linear_env, max_episodes, eta, gamma, epsilon, seed=seed)
+    policy, value = linear_env.decode_policy(parameters)
+    linear_env.render(policy, value)
 
     print('## linear q_learning')
-    linear_env = LinearWrapper(env)
     parameters = linear_q_learning(linear_env, max_episodes, eta, gamma, epsilon, seed=seed)
     policy, value = linear_env.decode_policy(parameters)
     linear_env.render(policy, value)
