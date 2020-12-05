@@ -2,9 +2,10 @@
 import numpy as np
 import random
 
-def randomBestAction(mean_rewards):
+def randomBestAction(random_state, mean_rewards):
+    # get the best actions from mean_rewards
     best_actions = np.array(np.argwhere(mean_rewards == np.amax(mean_rewards))).flatten()
-    return np.random.choice(best_actions, 1)[0]
+    return random_state.choice(best_actions, 1)[0]  # break ties randomly and return one of the best actions
 
 def sarsa(env, max_episodes, eta, gamma, epsilon, seed=None):
     random_state = np.random.RandomState(seed)
@@ -21,11 +22,11 @@ def sarsa(env, max_episodes, eta, gamma, epsilon, seed=None):
         if(timestep < env.n_actions):
             a = timestep #select each action once
         else:
-            best_action = randomBestAction(np.average(q, axis=0))
-            if(np.random.random(1) < epsilon[i]):
+            best_action = randomBestAction(random_state, np.average(q, axis=0))
+            if(random_state.random(1) < epsilon[i]):
                 a = best_action
             else:
-                a = random.randrange(env.n_actions)
+                a = random_state.choice(range(env.n_actions))
         timestep += 1
 
         while(s != env.absorbing_state):
@@ -35,11 +36,11 @@ def sarsa(env, max_episodes, eta, gamma, epsilon, seed=None):
             if(timestep < env.n_actions):
                 a_prime = timestep #select each action once
             else:
-                best_action = randomBestAction(np.average(q, axis=0))
-                if(np.random.random(1) < epsilon[i]):
+                best_action = randomBestAction(random_state, np.average(q, axis=0))
+                if(random_state.random(1) < epsilon[i]):
                     a_prime = best_action
                 else:
-                    a_prime = random.randrange(env.n_actions)
+                    a_prime = random_state.choice(range(env.n_actions))
             timestep += 1
             q[s,a] = q[s,a] + eta[i] * (r + gamma * q[s_prime, a_prime] - q[s,a])
             s = s_prime
@@ -68,15 +69,15 @@ def q_learning(env, max_episodes, eta, gamma, epsilon, seed=None):
             if(timestep < env.n_actions):
                 a = timestep #select each action once
             else:
-                best_action = randomBestAction(np.average(q, axis=0))
-                if(np.random.random(1) < epsilon[i]):
+                best_action = randomBestAction(random_state, np.average(q, axis=0))
+                if(random_state.random(1) < epsilon[i]):
                     a = best_action
                 else:
-                    a = random.randrange(env.n_actions)
+                    a = random_state.choice(range(env.n_actions))
             timestep += 1
 
             s_prime, r, done = env.step(a)
-            a_prime = randomBestAction(np.average(q, axis=0))
+            a_prime = randomBestAction(random_state, np.average(q, axis=0))
 
             q[s,a] += eta[i] * (r + gamma * q[s_prime, a_prime] - q[s,a])
             s = s_prime
