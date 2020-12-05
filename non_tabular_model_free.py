@@ -66,9 +66,9 @@ def linear_sarsa(env, max_episodes, eta, gamma, epsilon, seed=None):
             # roll a random number from 0-1 and compare to epsilon[i] to decide whether we take best action
             # (exploitation) or a random action (exploration)
             if random_state.random(1) < epsilon[i]:
-                a = best_action  # use best action
-            else:
                 a = random_state.choice(range(env.n_actions))  # use random action
+            else:
+                a = best_action  # use best action
         timestep += 1
 
         done = False
@@ -88,9 +88,9 @@ def linear_sarsa(env, max_episodes, eta, gamma, epsilon, seed=None):
                 # roll a random number from 0-1 and compare to epsilon[i] to decide whether we take best action
                 # (exploitation) or a random action (exploration)
                 if random_state.random(1) < epsilon[i]:
-                    a_prime = best_action  # use best action
-                else:
                     a_prime = random_state.choice(range(env.n_actions))  # use random action
+                else:
+                    a_prime = best_action  # use best action
             timestep += 1
 
             # Temporal difference
@@ -126,9 +126,9 @@ def linear_q_learning(env, max_episodes, eta, gamma, epsilon, seed=None):
                 # roll a random number from 0-1 and compare to epsilon[i] to decide whether we take best action
                 # (exploitation) or a random action (exploration)
                 if random_state.random(1) < epsilon[i]:
-                    a = best_action  # use best action
-                else:
                     a = random_state.choice(range(env.n_actions))  # use random action
+                else:
+                    a = best_action  # use best action
             timestep += 1
 
             features_prime, r, done = env.step(a)  # Get next state and reward for the chosen action

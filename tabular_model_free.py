@@ -24,9 +24,9 @@ def sarsa(env, max_episodes, eta, gamma, epsilon, seed=None):
         else:
             best_action = randomBestAction(random_state, np.average(q, axis=0))
             if(random_state.random(1) < epsilon[i]):
-                a = best_action
-            else:
                 a = random_state.choice(range(env.n_actions))
+            else:
+                a = best_action
         timestep += 1
 
         while(s != env.absorbing_state):
@@ -38,9 +38,9 @@ def sarsa(env, max_episodes, eta, gamma, epsilon, seed=None):
             else:
                 best_action = randomBestAction(random_state, np.average(q, axis=0))
                 if(random_state.random(1) < epsilon[i]):
-                    a_prime = best_action
-                else:
                     a_prime = random_state.choice(range(env.n_actions))
+                else:
+                    a_prime = best_action
             timestep += 1
             q[s,a] = q[s,a] + eta[i] * (r + gamma * q[s_prime, a_prime] - q[s,a])
             s = s_prime
@@ -71,9 +71,9 @@ def q_learning(env, max_episodes, eta, gamma, epsilon, seed=None):
             else:
                 best_action = randomBestAction(random_state, np.average(q, axis=0))
                 if(random_state.random(1) < epsilon[i]):
-                    a = best_action
-                else:
                     a = random_state.choice(range(env.n_actions))
+                else:
+                    a = best_action
             timestep += 1
 
             s_prime, r, done = env.step(a)
