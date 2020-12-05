@@ -98,9 +98,10 @@ def linear_q_learning(env, max_episodes, eta, gamma, epsilon, seed=None):
             # Get next state and reward for best action chosen
             features_prime, r, done = env.step(a)
             delta = r - q[a]
-            for a_prime in range(env.n_actions):
-                q[a_prime] = theta.dot(features_prime[a_prime])
 
+            #for i in range(env.n_actions):
+            #    q[i] = theta.dot(features_prime[i])
+            q = features_prime.dot(theta)
             # Temporal difference
             delta = delta + (gamma * randomBestAction(q))
             theta = theta + eta[i] * delta * features[a]
