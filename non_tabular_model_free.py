@@ -65,7 +65,7 @@ def linear_sarsa(env, max_episodes, eta, gamma, epsilon, seed=None):
 
 def linear_q_learning(env, max_episodes, eta, gamma, epsilon, seed=None):
     random_state = np.random.RandomState(seed)
-    s = env.reset()
+    #s = env.reset()
     eta = np.linspace(eta, 0, max_episodes)
     epsilon = np.linspace(epsilon, 0, max_episodes)
 
@@ -78,8 +78,9 @@ def linear_q_learning(env, max_episodes, eta, gamma, epsilon, seed=None):
 
         # Compute Q(a)
         q = np.zeros(env.n_actions)
-        for a in range(env.n_actions):
-            q[a] = theta.dot(features[a])
+        #for a in range(env.n_actions):
+         #   q[a] = theta.dot(features[a])
+        q = features.dot(theta)
 
         done = False
         while not done:
@@ -95,14 +96,15 @@ def linear_q_learning(env, max_episodes, eta, gamma, epsilon, seed=None):
             timestep += 1
 
             # Get next state and reward for best action chosen
-            features, r, done = env.step(a)
+            features_prime, r, done = env.step(a)
             delta = r - q[a]
             for a_prime in range(env.n_actions):
-                q[a_prime] = theta.dot(features[a_prime])
+                q[a_prime] = theta.dot(features_prime[a_prime])
 
             # Temporal difference
             delta = delta + (gamma * randomBestAction(q))
             theta = theta + eta[i] * delta * features[a]
+            features = features_prime
 
     return theta
 
