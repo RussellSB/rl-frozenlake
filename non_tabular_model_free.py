@@ -53,13 +53,43 @@ def linear_sarsa(env, max_episodes, eta, gamma, epsilon, seed=None):
 
     theta = np.zeros(env.n_features)
 
+    timestep = 0
     for i in range(max_episodes):
         features = env.reset()
 
         q = features.dot(theta)
 
         # TODO:
+        # Compute Q(a)
+        q = features.dot(theta)
 
+        done = False
+        while not done:
+            # Select action a_prime for state s_prime according to an e-greedy policy based on Q
+            if timestep < env.n_actions:
+                a = timestep  # select each action once
+            else:
+                best_action = randomBestAction(q)
+                if np.random.random(1) < epsilon[i]:
+                    a = best_action
+                else:
+                    a = random.randrange(env.n_actions)
+            timestep += 1
+
+            # Get next state and reward for best action chosen
+            features_prime, r, done = env.step(a)
+            delta = r - q[a]
+
+            q = features_prime.dot(theta)
+            # Temporal difference
+            best_action = randomBestAction(q)
+            if np.random.random(1) < epsilon[i]:
+                a = best_action
+            else:
+                a = random.randrange(env.n_actions)
+            delta = delta + (gamma * q[a])
+            theta = theta + eta[i] * delta * features[a]
+            features = features_prime
     return theta
 
 
