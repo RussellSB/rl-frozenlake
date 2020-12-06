@@ -30,7 +30,7 @@ class EnvironmentModel:
         # Scenario action 3 (right) - where slip is 0.2
         # Moving from state 0. We want an array like this:
         # p = [0.1, 0.8, 0, 0, 0.1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        #print(p)
+        # print(p)
         next_state = self.random_state.choice(self.n_states, p=p)  # chooses state with highest
         reward = self.r(next_state, state, action)
 
@@ -117,7 +117,7 @@ class FrozenLake(Environment):
                     # Checks if hole or goal, to only enable absorption state transitions
                     state_char = self.lake_flat[state_index]
                     if state_char == '$' or state_char == '#':
-                        self.tp[state_index, 16, action_index] = 1.0
+                        self.tp[state_index, n_states-1, action_index] = 1.0
                         continue
 
                     # Proceeds normally

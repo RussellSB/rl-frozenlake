@@ -23,8 +23,10 @@ def main():
                     ['.', '#', '.', '.', '#', '.', '#', '.'],
                     ['.', '.', '.', '#', '.', '.', '.', '$']]
 
-    env = FrozenLake(small_lake, slip=0.1, max_steps=16, seed=seed)
-    # env.play()
+    lake = big_lake
+    size = len(lake) * len(lake[0])
+    env = FrozenLake(lake, slip=0.1, max_steps=size, seed=seed)
+    #env.play()
 
     print('# Model-based algorithms')
     gamma = 0.9
