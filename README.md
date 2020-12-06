@@ -10,13 +10,11 @@ After reaching the goal state, the agent recieves a reward when commiting an act
 
 The agent may move for a number of steps. In this period the reward can either conclude to 1 (goal reached) or 0 (goal not reached).
 
-## In-progess
-- Sara control + linear function approximation
-- Q-learning control + linear function approximation
-
 ## Implemented
 - Policy iteration
 - Frozen lake environment
 - Value iteration
 - Sarsa control
 - Q-learning
+- Sara control + linear function approximation
+- Q-learning control + linear function approximation
