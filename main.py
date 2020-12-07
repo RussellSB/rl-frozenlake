@@ -6,7 +6,7 @@ from non_tabular_model_free import linear_q_learning, linear_sarsa, LinearWrappe
 
 
 def main():
-    seed = 8
+    seed = 0
 
     # Small lake
     small_lake =    [['&', '.', '.', '.'],
@@ -23,6 +23,7 @@ def main():
                     ['.', '#', '.', '.', '#', '.', '#', '.'],
                     ['.', '.', '.', '#', '.', '.', '.', '$']]
 
+    # lake = big_lake
     lake = small_lake
     size = len(lake) * len(lake[0])
     env = FrozenLake(lake, slip=0.1, max_steps=size, seed=seed)
