@@ -6,7 +6,7 @@ from non_tabular_model_free import linear_q_learning, linear_sarsa, LinearWrappe
 
 
 def main():
-    seed = 0
+    seed = 8
 
     # Small lake
     small_lake =    [['&', '.', '.', '.'],
@@ -23,7 +23,7 @@ def main():
                     ['.', '#', '.', '.', '#', '.', '#', '.'],
                     ['.', '.', '.', '#', '.', '.', '.', '$']]
 
-    lake = big_lake
+    lake = small_lake
     size = len(lake) * len(lake[0])
     env = FrozenLake(lake, slip=0.1, max_steps=size, seed=seed)
     #env.play()
@@ -35,15 +35,15 @@ def main():
 
     print('')
 
-    print('## Policy iteration')
-    policy, value = policy_iteration(env, gamma, theta, max_iterations)
-    env.render(policy, value)
-
-    print('')
-
-    print('## Value iteration')
-    policy, value = value_iteration(env, gamma, theta, max_iterations)
-    env.render(policy, value)
+    # print('## Policy iteration')
+    # policy, value = policy_iteration(env, gamma, theta, max_iterations)
+    # env.render(policy, value)
+    #
+    # print('')
+    #
+    # print('## Value iteration')
+    # policy, value = value_iteration(env, gamma, theta, max_iterations)
+    # env.render(policy, value)
 
     max_episodes = 2000
     eta = 0.5
@@ -51,10 +51,10 @@ def main():
 
     print('# Model-free algorithms')
     print('## sarsa')
-    policy, value = sarsa(env, max_episodes, eta, gamma, epsilon)
+    policy, value = sarsa(env, max_episodes, eta, gamma, epsilon, seed=seed)
     env.render(policy, value)
     print('## q_learning')
-    policy, value = q_learning(env, max_episodes, eta, gamma, epsilon)
+    policy, value = q_learning(env, max_episodes, eta, gamma, epsilon, seed=seed)
     env.render(policy, value)
 
     print('# Model-free algorithms')
