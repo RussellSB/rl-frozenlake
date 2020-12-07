@@ -32,7 +32,8 @@ def sarsa(env, max_episodes, eta, gamma, epsilon, seed=None):
                 a = best_action  # use best action
         timestep += 1
 
-        while(s != env.absorbing_state):  # while not in absorbing state
+        done = False
+        while(not done):  # while not in absorbing state
             s_prime, r, done = env.step(a)
 
             #Select action a_prime for state s_prime according to an e-greedy policy based on Q
@@ -69,8 +70,8 @@ def q_learning(env, max_episodes, eta, gamma, epsilon, seed=None):
     timestep = 0
     for i in range(max_episodes):
         s = env.reset()  # start from a fresh environment
-
-        while(s != env.absorbing_state):  # while not in absorbing state
+        done = False
+        while(not done):  # while not in absorbing state
 
             #Select action a_prime for state s_prime according to an e-greedy policy based on Q
             if(timestep < env.n_actions):  # for the first 4 timesteps, choose each action once
