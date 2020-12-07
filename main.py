@@ -87,4 +87,35 @@ def main():
         if np.array_equal(policy, optimal_policy):
             break
     env.render(policy, value)
+
+    print('find best policy on big map')
+
+    lake = big_lake
+    size = len(lake) * len(lake[0])
+    env = FrozenLake(lake, slip=0.1, max_steps=size, seed=seed)
+
+    print('## Value iteration')
+    optimal_policy, value = value_iteration(env, gamma, theta, max_iterations)
+    env.render(optimal_policy, value)
+
+    max_episodes = 11000
+    eta = 0.5
+    epsilon = 0.99
+    gamma = 0.91
+
+    linear_env = LinearWrapper(env)
+
+    print('## linear sarsa')
+    parameters = linear_sarsa(linear_env, max_episodes, eta, gamma, epsilon, seed=seed)
+    policy, value = linear_env.decode_policy(parameters)
+    linear_env.render(policy, value)
+    dif = (policy == optimal_policy).sum()
+    print(f'sarsa difference to optimal = {100*(dif)/size}%')
+
+    print('## linear q_learning')
+    parameters = linear_q_learning(linear_env, max_episodes, eta, gamma, epsilon, seed=seed)
+    policy, value = linear_env.decode_policy(parameters)
+    linear_env.render(policy, value)
+    dif = (policy == optimal_policy).sum()
+    print(f'q_learning difference to optimal = {100*(dif)/size}%')
 main()
