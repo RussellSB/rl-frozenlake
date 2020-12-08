@@ -98,24 +98,20 @@ def main():
     optimal_policy, value = value_iteration(env, gamma, theta, max_iterations)
     env.render(optimal_policy, value)
 
-    max_episodes = 11000
-    eta = 0.5
+    max_episodes = 200000
+    eta = 0.8
     epsilon = 0.99
     gamma = 0.91
 
-    linear_env = LinearWrapper(env)
+    print('## sarsa')
+    policy, value = sarsa(env, max_episodes, eta, gamma, epsilon, seed=seed)
+    env.render(policy, value)
+    correct = (policy == optimal_policy).sum()
+    print(f'sarsa optimalness = {100 * correct / size}%')
 
-    print('## linear sarsa')
-    parameters = linear_sarsa(linear_env, max_episodes, eta, gamma, epsilon, seed=seed)
-    policy, value = linear_env.decode_policy(parameters)
-    linear_env.render(policy, value)
-    dif = (policy == optimal_policy).sum()
-    print(f'sarsa difference to optimal = {100*(dif)/size}%')
-
-    print('## linear q_learning')
-    parameters = linear_q_learning(linear_env, max_episodes, eta, gamma, epsilon, seed=seed)
-    policy, value = linear_env.decode_policy(parameters)
-    linear_env.render(policy, value)
-    dif = (policy == optimal_policy).sum()
-    print(f'q_learning difference to optimal = {100*(dif)/size}%')
+    print('## q_learning')
+    policy, value = q_learning(env, max_episodes, eta, gamma, epsilon, seed=seed)
+    env.render(policy, value)
+    correct = (policy == optimal_policy).sum()
+    print(f'q-learning optimalness = {100 * correct / size}%')
 main()
