@@ -20,4 +20,4 @@ The agent may move for a number of steps. In this period the reward can either c
 - Q-learning control + linear function approximation
 
 ## How to run
-You may run any of the above algorithms through main.py. In here, all methods with corresponding names for the algorithms may be found.
+You may run any of the above algorithms through interpreting the main file main.py. In here, all methods with corresponding names for the algorithms may be found. The environment on which the algorithms are ran on may be redifined as small_lake or big_lake. Feel free to redefine it to an entirely new environment as well, as long as its in a list format with $, ., #, and & characters for goal, ice, hole, and agent states respectively.
