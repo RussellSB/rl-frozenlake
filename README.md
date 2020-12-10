@@ -18,3 +18,6 @@ The agent may move for a number of steps. In this period the reward can either c
 - Q-learning
 - Sara control + linear function approximation
 - Q-learning control + linear function approximation
+
+## How to run
+You may run any of the above algorithms through main.py. In here, all methods with corresponding names for the algorithms may be found.
